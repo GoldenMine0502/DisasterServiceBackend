@@ -38,7 +38,7 @@ class FileService(
     }
 
     fun storeFile(id: Long, file: MultipartFile): String {
-        val fileName = "${id}.jpg"
+        val fileName = "$id.jpg"
 
         val minimizedImage = getMinimizedImage(file)
         val bos = ByteArrayOutputStream()

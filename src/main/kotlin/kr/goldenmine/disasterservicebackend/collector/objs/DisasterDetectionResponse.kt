@@ -1,4 +1,4 @@
-package kr.goldenmine.disasterservicebackend.collector
+package kr.goldenmine.disasterservicebackend.collector.objs
 
 data class DisasterDetectionResponse(
     val output: List<Double>,

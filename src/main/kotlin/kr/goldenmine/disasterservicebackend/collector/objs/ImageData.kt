@@ -1,4 +1,4 @@
-package kr.goldenmine.disasterservicebackend.collector
+package kr.goldenmine.disasterservicebackend.collector.objs
 
 import jakarta.persistence.*
 
@@ -20,5 +20,13 @@ class ImageData(
 ) {
     override fun toString(): String {
         return "ImageData(id=$id, token='$token', label=$label, percent=$percent)"
+    }
+
+    fun toDto(): ImageDataDTO {
+        return ImageDataDTO(
+            token,
+            label,
+            percent,
+        )
     }
 }

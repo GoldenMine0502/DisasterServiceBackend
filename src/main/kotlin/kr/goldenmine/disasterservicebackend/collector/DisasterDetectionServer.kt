@@ -1,5 +1,6 @@
 package kr.goldenmine.disasterservicebackend.collector
 
+import kr.goldenmine.disasterservicebackend.collector.objs.DisasterDetectionResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.Multipart
