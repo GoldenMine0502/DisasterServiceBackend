@@ -17,7 +17,15 @@ class ChatController(
     ) {
         if(chatRequest.text.isEmpty()) throw RuntimeException()
 
-        chatService.addChat(chatRequest.text, request.remoteAddr)
+        chatService.addChat(chatRequest.text, getClientIp(request))
+    }
+
+    fun getClientIp(request: HttpServletRequest): String {
+        var clientIp = request.getHeader("X-Forwarded-For")
+        if (clientIp == null || clientIp.isEmpty() || "unknown".equals(clientIp, ignoreCase = true)) {
+            clientIp = request.remoteAddr
+        }
+        return clientIp
     }
 
     @GetMapping("/list")
