@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.RestController
 class WeatherController(
     val service: WeatherService
 ) {
-    @GetMapping
+    @GetMapping(
+        "/current"
+    )
     fun current(
         request: RequestCurrentWeather,
     ): ResponseCurrentWeather {
