@@ -16,7 +16,7 @@ class WeatherController(
         @RequestBody request: RequestCurrentWeather,
     ): ResponseCurrentWeather {
         val location = service.getLocationNearby(request.latitude, request.longitude)
-        val temperature = service.getTemperature(location) ?: -100.0
+        val temperature = service.getTemperature(location) ?: 25.0
 
         return ResponseCurrentWeather(
             location,

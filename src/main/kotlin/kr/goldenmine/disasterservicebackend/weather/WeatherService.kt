@@ -176,6 +176,7 @@ class WeatherService(
         var min = Double.MAX_VALUE
 
         for(location in locationList) {
+            if(location.level1?.contains("충청북도") == false) continue
             val distance = distance(
                 result.latitudeSecPer100, location.latitudeSecPer100,
                 result.longitudeSecPer100, location.latitudeSecPer100,
