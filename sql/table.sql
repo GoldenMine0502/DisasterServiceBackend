@@ -13,10 +13,17 @@ DESC image_data;
 
 CREATE TABLE image_data(
 	id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    date TIMESTAMP,
+    timestamp TIMESTAMP,
     token VARCHAR(30) NOT NULL,
     label INT NOT NULL,
     percent DOUBLE NOT NULL
+);
+
+CREATE TABLE chat(
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    timestamp TIMESTAMP,
+    ip VARCHAR(30),
+    text TEXT
 );
 
 DROP TABLE image_data;

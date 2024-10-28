@@ -13,7 +13,7 @@ class Chat(
     @Column(name = "timestamp", nullable = false)
     val timestamp: Timestamp,
 
-    @Column(name = "token", nullable = false)
+    @Column(name = "ip", nullable = false)
     val ip: String,
 
     @Column(name = "text", nullable = false)

@@ -4,6 +4,7 @@ import com.opencsv.CSVReader
 import org.springframework.stereotype.Service
 import java.io.BufferedReader
 import java.io.FileReader
+import java.nio.charset.Charset
 
 @Service
 class ShelterService {
@@ -13,7 +14,7 @@ class ShelterService {
         val filePath = "data/민방위.csv"
         val shelters = mutableListOf<Shelter>()
 
-        CSVReader(FileReader(filePath)).use { reader ->
+        CSVReader(FileReader(filePath, Charset.forName("CP949"))).use { reader ->
             reader.skip(1) // 첫 번째 줄을 건너뜀 (헤더)
 
             reader.forEach { tokens ->

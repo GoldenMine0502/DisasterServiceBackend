@@ -1,7 +1,6 @@
 package kr.goldenmine.disasterservicebackend.chat
 
 import jakarta.servlet.http.HttpServletRequest
-import kr.goldenmine.disasterservicebackend.chat.objs.ChatDTO
 import kr.goldenmine.disasterservicebackend.chat.objs.RequestSendChat
 import kr.goldenmine.disasterservicebackend.chat.objs.ResponseChatList
 import org.springframework.web.bind.annotation.*

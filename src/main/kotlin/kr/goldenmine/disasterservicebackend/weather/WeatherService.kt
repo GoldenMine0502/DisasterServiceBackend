@@ -1,15 +1,20 @@
 package kr.goldenmine.disasterservicebackend.weather
 
+import com.google.gson.GsonBuilder
 import kr.goldenmine.disasterservicebackend.util.distance
+import okhttp3.OkHttpClient
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.io.File
+import java.nio.charset.Charset
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.concurrent.TimeUnit
 
 @Service
 class WeatherService(
@@ -19,10 +24,10 @@ class WeatherService(
 
     val locationList = loadLocationData()
     val retrofitService = createRetrofitService()
-    val serviceKey = getServiceKey()
+    val serviceKey = getServiceKeyFromFile()
 //    val info = HashMap<Pair<String, String>>
 
-    private final fun getServiceKey(): String {
+    private final fun getServiceKeyFromFile(): String {
         val file = File("data/servicekey.txt")
 
         return file.readText()
@@ -31,7 +36,7 @@ class WeatherService(
     private final fun loadLocationData(): List<LocationData> {
         val filePath = "data/240715.csv"
         val locationDataList = mutableListOf<LocationData>()
-        File(filePath).bufferedReader().useLines { lines ->
+        File(filePath).bufferedReader(Charset.forName("CP949")).useLines { lines ->
             lines.drop(1).forEach { line -> // 첫 번째 줄은 헤더이므로 건너뜁니다.
                 val columns = line.split(",")
 
@@ -61,9 +66,22 @@ class WeatherService(
     }
 
     private final fun createRetrofitService(): WeatherRequestService {
+        val gson = GsonBuilder()
+            .setLenient()  // Enable lenient mode
+            .create()
+
+        // Configure OkHttpClient with custom timeout values
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(30, TimeUnit.SECONDS) // Connection timeout
+            .readTimeout(30, TimeUnit.SECONDS)    // Read timeout
+            .writeTimeout(30, TimeUnit.SECONDS)   // Write timeout
+            .build()
+
         val retrofit = Retrofit.Builder()
-            .baseUrl("http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0") // 기본 URL을 여기에 설정하세요
-            .addConverterFactory(GsonConverterFactory.create()) // XML 형식이므로 SimpleXml 사용
+            .baseUrl("http://apis.data.go.kr/") // 기본 URL을 여기에 설정하세요
+            .client(okHttpClient)  // Use the customized OkHttpClient
+            .addConverterFactory(GsonConverterFactory.create(gson)) // XML 형식이므로 SimpleXml 사용
+            .addConverterFactory(ScalarsConverterFactory.create()) // XML 형식이므로 SimpleXml 사용
             .build()
 
         return retrofit.create(WeatherRequestService::class.java)
@@ -75,7 +93,10 @@ class WeatherService(
     private val temperatures = HashMap<String, ArrayList<Pair<String, Double>>>()
 
     fun crawlAll() {
+        logger.info("service key: $serviceKey")
+
         for(location in locationList) {
+//            println(location.level1)
             if(location.level1?.contains("충청북도") == true) {
                 val nx = location.gridX
                 val ny = location.gridY
@@ -92,7 +113,7 @@ class WeatherService(
                         Thread.sleep(1000)
                         break
                     } catch(ex: Exception) {
-                        logger.error(ex.message)
+                        logger.error(ex.message, ex)
                         Thread.sleep(5000)
                     }
                 }
@@ -117,11 +138,13 @@ class WeatherService(
             baseTime = hms,
             nx = x,
             ny = y,
-        ).execute().body()
+        ).execute()
 
-        if(response == null) throw RuntimeException("요청 실패")
+//        println(response.raw().body.toString())
 
-        val values = response.response.body.items.item
+        val body = response.body() ?: throw RuntimeException("요청 실패 ${response.code()} ${response.message()}")
+//        println(body)
+        val values = body.response.body.items.item
             .asSequence()
             .filter { it.category == "TMP" }  // 온도로 필터링
             .map { Pair("${it.fcstDate}-${it.fcstTime}", it.fcstValue.toDouble()) }
