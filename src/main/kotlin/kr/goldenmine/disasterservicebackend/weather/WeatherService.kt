@@ -1,6 +1,5 @@
 package kr.goldenmine.disasterservicebackend.weather
 
-import kr.goldenmine.disasterservicebackend.collector.ImageRequestController
 import kr.goldenmine.disasterservicebackend.util.distance
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
