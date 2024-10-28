@@ -14,7 +14,7 @@ plugins {
 val mysqlVersion = "8.0.33"
 
 group = "kr.goldenmine"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.2-SNAPSHOT"
 
 java {
     toolchain {

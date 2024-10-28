@@ -21,7 +21,7 @@ class WeatherAutoCrawler(
         override fun run() {
             logger.info("crawling weather started.")
             while(true) {
-//                weatherService.crawlAll()
+                weatherService.crawlAll()
                 logger.info("crawling weather epoch finished.")
                 sleep(sleepTime)
             }
