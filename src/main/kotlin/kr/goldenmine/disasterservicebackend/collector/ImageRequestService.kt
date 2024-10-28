@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.sql.Timestamp
 import kotlin.math.min
 
 @Service
@@ -38,6 +39,7 @@ class ImageRequestService(
 
         val imageData = ImageData(
             0,
+            Timestamp(System.currentTimeMillis()),
             token,
             result.label,
             result.labelPercent(),
